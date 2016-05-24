@@ -57,6 +57,11 @@ class AuthController extends Controller
 
         User::unguard();
         $user = User::create($userData);
+
+        // Create default groups, workouts, and exercises for 
+        // each new user
+        Event::fire(new UserWasCreated($user));
+        
         User::reguard();
 
         if(!$user->id) {

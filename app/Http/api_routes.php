@@ -37,11 +37,8 @@ $api->version('v1', function ($api) {
 		});
 
 		$api->resource('sets', 'SetController', ['except' => ['index', 'edit', 'create']]);
-
 		$api->resource('exercises', 'ExerciseController', ['except' => ['edit', 'create']]);
-
 		$api->resource('workouts', 'WorkoutController', ['except' => ['edit', 'create']]);
-
 		$api->resource('groups', 'GroupController', ['except' => ['edit', 'create']]);
 	});
 

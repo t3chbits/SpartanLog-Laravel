@@ -11,11 +11,13 @@ use App\Http\Requests;
 class HistoryController extends Controller
 {
 	/**
-     * Display the specified resource.
+     * Get all exercises with at least one set.
+     * Format exercises for javascript to be used 
+     * in generating a line chart using Chart.js
      *
      * @return \Illuminate\Http\Response
      */
-    public function exerciseLineChart() {
+    public function getExercisesForLineChart() {
     	$exercises = Auth::user()->exercises()
     		->has('sets') 	// only exercises with more than one set
     		->with('sets')

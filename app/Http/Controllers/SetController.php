@@ -17,19 +17,20 @@ class SetController extends Controller
 
     /**
      * Display a listing of the resource.
+     * This function may be used in the future. 
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($workout_id, $exercise_id)
-    {
-        $sets = Auth::user()->sets()
-            ->where('workout_id', '=', $workout_id)
-            ->where('exercise_id', '=', $exercise_id)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+    // public function index($workout_id, $exercise_id)
+    // {
+    //     $sets = Auth::user()->sets()
+    //         ->where('workout_id', '=', $workout_id)
+    //         ->where('exercise_id', '=', $exercise_id)
+    //         ->orderBy('created_at', 'DESC')
+    //         ->get();
             
-        return view('set.showAll', compact('sets'));
-    }
+    //     return view('set.showAll', compact('sets'));
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -46,15 +47,16 @@ class SetController extends Controller
 
     /**
      * Display the specified resource.
+     * This function may be used in the future.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $set = Auth::user()->sets()->findOrFail($id);
-        return view('set.showOne', compact('set'));
-    }
+    // public function show($id)
+    // {
+    //     $set = Auth::user()->sets()->findOrFail($id);
+    //     return view('set.showOne', compact('set'));
+    // }
 
     /**
      * Show the form for editing the specified resource.

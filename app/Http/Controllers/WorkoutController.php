@@ -41,6 +41,7 @@ class WorkoutController extends Controller
 
     /**
      * Display the specified resource.
+     * Get a list of all exercises to populate a multiple select form.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -49,7 +50,6 @@ class WorkoutController extends Controller
     {
         $workout = Auth::user()->workouts()->findOrFail($id);
 
-        // order by bodyRegion
         $exerciseList = Auth::user()->exercises()
             ->select('exercises.id', 'exercises.name')
             ->lists('name', 'id');
@@ -85,7 +85,7 @@ class WorkoutController extends Controller
     }
 
     /**
-     * Attach an exercise to a workout.
+     * Attach an exercise or several exercises to a workout.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -122,7 +122,7 @@ class WorkoutController extends Controller
     }
 
     /**
-     * Attach a group to a workout.
+     * Attach a group or several groups to a workout.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id

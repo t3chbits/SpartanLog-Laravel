@@ -59,6 +59,8 @@ class AuthController extends Controller
             'password' => $data['password'],
         ]);
 
+        // Create default groups, workouts, and exercises for 
+        // each new user
         Event::fire(new UserWasCreated($user));
 
         return $user;

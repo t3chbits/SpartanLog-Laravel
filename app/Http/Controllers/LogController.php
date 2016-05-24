@@ -37,7 +37,8 @@ class LogController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get all exercises associated with the specified workout
+     * and paginate them so that only one exercise is shown at a time.
      *
      * @param  int $workout_id
      * @return \Illuminate\Http\Response

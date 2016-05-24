@@ -1,6 +1,9 @@
 $(document).ready(function() {
-  console.log(exercises); 
 
+  // for each exercise add a canvas to history.blade.php
+  // reformat the date of the associated sets
+  // and create a line chart showing the change 
+  // in set weight over time
   for(var i = 0; i < exercises.length; i++) {
 
     $('#chart'+i).append('<canvas id="canvas'+i+'" height="2" width="2"></canvas></div>');

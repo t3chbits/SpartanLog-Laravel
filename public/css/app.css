@@ -1,9 +1,11 @@
+/* Used to prevent text from overlowing outside buttons */
 .btn {
   white-space: normal;
   height:auto;
   vertical-align: middle;
 }
 
+/* Used on the table in log.blade.php */
 table, .borderless td, .borderless th {
     border: none !important;
 }

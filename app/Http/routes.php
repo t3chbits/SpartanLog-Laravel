@@ -22,7 +22,7 @@ Route::get('api', function () {
 
 Route::group(['middleware' => 'auth'], function () {
 
-	Route::get('history', 'HistoryController@exerciseLineChart');
+	Route::get('history', 'HistoryController@getExercisesForLineChart');
 
 	Route::post('workouts/{id}/attachExercise', 'WorkoutController@attachExercise');
 	Route::post('workouts/{id}/detachExercise', 'WorkoutController@detachExercise');
@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('logs', 'LogController@index');
 	Route::get('logs/{workout_id}', 'LogController@show');
+
 	Route::resource('sets', 'SetController', ['except' => ['index', 'show', 'create']]);
 	Route::resource('exercises', 'ExerciseController', ['except' => ['create', 'edit']]);
 	Route::resource('workouts', 'WorkoutController', ['except' => ['create', 'edit']]);

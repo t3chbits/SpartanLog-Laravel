@@ -41,6 +41,7 @@ class GroupController extends Controller
 
     /**
      * Display the specified resource.
+     * Get a list of all workouts to populate a multiple select form.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -49,7 +50,6 @@ class GroupController extends Controller
     {
         $group = Auth::user()->groups()->findOrFail($id);
 
-        // order by alphabetical 
         $workoutList = Auth::user()->workouts()
             ->select('workouts.id', 'workouts.name')
             ->lists('name', 'id');
@@ -85,7 +85,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Attach a workout to a group.
+     * Attach a workout or several workouts to a group.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
