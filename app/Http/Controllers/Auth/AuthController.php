@@ -5,6 +5,9 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+
+use Event;
+use App\Events\UserWasCreated;
 class AuthController extends Controller
 {
     /*
@@ -49,11 +52,15 @@ class AuthController extends Controller
      * @return User
      */
     protected function create(array $data)
-    {
-        return User::create([
+    {   
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
         ]);
+
+        Event::fire(new UserWasCreated($user));
+
+        return $user;
     }
 }
