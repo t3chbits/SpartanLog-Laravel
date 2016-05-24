@@ -89,7 +89,7 @@ class UserDefaultDataGeneration
         $push = new Workout(['name' => 'Push']);
         $event->user->workouts()->save($push);
 
-        $pull = new Workout(['name' => 'pull']);
+        $pull = new Workout(['name' => 'Pull']);
         $event->user->workouts()->save($pull);
 
         $legs = new Workout(['name' => 'Legs']);
