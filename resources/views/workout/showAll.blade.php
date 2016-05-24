@@ -37,5 +37,6 @@
 			{!! Form::close() !!}
 		</div>
 
+		{!! $workouts->links() !!}
 	</div>
 @stop

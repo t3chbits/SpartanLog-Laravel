@@ -22,7 +22,8 @@ class ExerciseController extends Controller
      */
     public function index()
     {
-        $exercises = Auth::user()->exercises()->get();
+        $exercises = Auth::user()->exercises()
+            ->simplePaginate(15);
         return view('exercise.showAll', compact('exercises'));
     }
 

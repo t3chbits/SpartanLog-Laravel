@@ -39,5 +39,6 @@
 
 		</div>
 
+		{!! $exercises->links() !!}
 	</div>
 @stop

@@ -22,7 +22,7 @@ class WorkoutController extends Controller
      */
     public function index()
     {
-        $workouts = Auth::user()->workouts()->get();
+        $workouts = Auth::user()->workouts()->simplePaginate(15);
         return view('workout.showAll', compact('workouts'));
     }
 

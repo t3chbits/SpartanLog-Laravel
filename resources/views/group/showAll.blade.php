@@ -37,5 +37,6 @@
 			{!! Form::close() !!}
 		</div>
 
+		{!! $groups->links() !!}
 	</div>
 @stop

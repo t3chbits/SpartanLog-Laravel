@@ -5,22 +5,21 @@
 
 		<div>@include('errors.list')</div>	
 
-		<div class="well">
-			<h3 class="text-center">{{$workout->name}}</h3>
-		</div>
-
 		@if(count($exercises))
 			@foreach($exercises as $exercise)
 				<div class="panel panel-default">
 				  <div class="panel-heading">
-				  	<div class="row">
-					  	<div class="col-xs-9 col-sm-10 col-md-11">
-					    	<h3>{{$exercise->name}}</h3>
-					    </div>
-					    <div class="col-xs-3 col-sm-2 col-md-1">
-					    	@include('partials.detachExercise')
-					    </div>
-					   </div>
+				  	<div class="row text-center">
+							<div class="col-xs-3 col-sm-2 col-md-1">
+								@include('pagination.previous', ['paginator' => $exercises])
+							</div>
+							<div class="col-xs-6 col-sm-8 col-md-10">
+								<h4>{{$exercise->name}}</h4>
+							</div>
+							<div class="col-xs-3 col-sm-2 col-md-1">
+			    			@include('pagination.next', ['paginator' => $exercises])
+			    		</div>
+					  </div>
 				  </div>
 				  <div class="panel-body">
 						<div class="row">
@@ -70,7 +69,17 @@
     @endif
 
     <div class="well text-center">
-    	@include('pagination.default', ['paginator' => $exercises])
-    </div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-2 col-md-1">
+					@include('pagination.previous', ['paginator' => $exercises])
+				</div>
+				<div class="col-xs-6 col-sm-8 col-md-10">
+					<h5>{{$workout->name}}</h5>
+				</div>
+				<div class="col-xs-3 col-sm-2 col-md-1">
+    			@include('pagination.next', ['paginator' => $exercises])
+    		</div>
+    	</div>
+		</div>
 	</div>
 @stop

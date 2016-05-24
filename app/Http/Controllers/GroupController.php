@@ -22,7 +22,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Auth::user()->groups()->get();
+        $groups = Auth::user()->groups()->simplePaginate(15);
         return view('group.showAll', compact('groups'));
     }
 
