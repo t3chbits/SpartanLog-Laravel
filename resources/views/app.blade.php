@@ -32,6 +32,7 @@
           <li><a href="{{ url('/groups') }}">Groups</a></li>
           <li><a href="{{ url('/workouts') }}">Workouts</a></li>
           <li><a href="{{ url('/exercises') }}">Exercises</a></li>
+          <li><a href="{{ url('/history') }}">History</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
@@ -64,11 +65,16 @@
     </div>
   </nav>
 
-  @yield('content')
+  <div class="container-fluid">
+    @yield('content')
+  </div>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.bundle.min.js"></script>
   <script type="text/javascript" src="{!! asset('js/index.js') !!}"></script>
+
+  @yield('footer')
 </body>
 </html>

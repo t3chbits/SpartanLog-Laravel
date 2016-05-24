@@ -46,4 +46,5 @@ $(document).ready(function() {
   // $('.threeMin').on('click', function () {timerFunction($(this), 3)});
   // $('.fourMin').on('click', function () {timerFunction($(this), 4)});
   // $('.fiveMin').on('click', function () {timerFunction($(this), 5)});
+
 });

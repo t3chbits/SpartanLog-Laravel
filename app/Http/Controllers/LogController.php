@@ -24,7 +24,6 @@ class LogController extends Controller
     public function index()
     {
         $workout_id = Auth::user()->workouts()
-            ->select('workouts.id')
             ->join('sets', 'sets.workout_id', '=', 'workouts.id')
             ->whereBetween('sets.created_at', 
                 [Carbon::today(), Carbon::tomorrow()])
@@ -51,6 +50,7 @@ class LogController extends Controller
         $exercises = Auth::user()->exercises()
             ->join('workout_exercise', 'workout_exercise.exercise_id', '=', 'exercises.id')
             ->where('workout_exercise.workout_id', '=', $workout_id)
+            ->select('exercises.id', 'exercises.name')
             ->with('sets')
             ->paginate(1);
 

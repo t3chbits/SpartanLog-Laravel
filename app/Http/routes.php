@@ -22,6 +22,8 @@ Route::get('api', function () {
 
 Route::group(['middleware' => 'auth'], function () {
 
+	Route::get('history', 'HistoryController@exerciseLineChart');
+
 	Route::post('workouts/{id}/attachExercise', 'WorkoutController@attachExercise');
 	Route::post('workouts/{id}/detachExercise', 'WorkoutController@detachExercise');
 	Route::post('workouts/{id}/attachGroup', 'WorkoutController@attachGroup');
