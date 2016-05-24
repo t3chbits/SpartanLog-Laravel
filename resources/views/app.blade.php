@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{!! asset('css/app.css') !!}">
 </head>
 
 <body>
@@ -35,6 +36,24 @@
 
         <ul class="nav navbar-nav navbar-right">
         @if (Auth::check())
+          <li>
+            <a class="twoMin">
+              <span class="glyphicon glyphicon-time"></span>
+              2 Min
+            </a>
+          <li>
+          <li>
+            <a class="oneMin">
+              <span class="glyphicon glyphicon-time"></span>
+              1 Min
+            </a>
+          <li>
+          <li>
+            <a class="thirtySec">
+              <span class="glyphicon glyphicon-time"></span>
+              30 Sec
+            </a>
+          <li>
           <li><a href="{{ url('auth/logout') }}">Logout</a></li>
         @else
           <li><a href="{{ url('auth/login') }}">Login</a></li>

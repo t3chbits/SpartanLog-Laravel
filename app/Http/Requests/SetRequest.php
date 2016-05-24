@@ -26,7 +26,7 @@ class SetRequest extends FormRequest
     {
         return [
             'repetitions' => 'required|integer|between:0,200',
-            'weight' => 'required|integer|between:0,200'
+            'weight' => 'required|integer|between:0,1000'
         ];
     }
 }

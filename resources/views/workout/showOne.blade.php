@@ -1,30 +1,38 @@
 @extends('app')
 
 @section('content')
-	<div class="container">
+	<div class="container-fluid">
 
 		<div>@include('errors.list')</div>
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">{{ $workout->name }}</h3>
-
-				<a href="{{ url('/logs', [$workout->id]) }}">
-					Generate a log from {{ $workout->name }}
-	      </a>
+				<div class="row">
+	        <div class="col-xs-6 col-sm-9 col-md-10">
+						<h3 class="panel-title text-center">{{ $workout->name }}</h3>
+					</div>
+					<div class="col-xs-6 col-sm-3 col-md-2">
+						<a href="{{ url('/logs', [$workout->id]) }}"
+		        	 class="btn btn-primary btn-block">
+		        	<span class="glyphicon glyphicon-send"></span>
+		          Generate Log
+		        </a>
+		      </div>
+		    </div>
 			</div>
 
 			<div class="panel-body">
 				@if(count($workout->exercises))
 		  		@foreach($workout->exercises as $exercise)
 	          <div class="row">
-	            <div class="col-xs-6">
-	            	<a href="{{ url('/exercises', [$exercise->id]) }}">
+	            <div class="col-xs-9 col-sm-10 col-md-11">
+	            	<a href="{{ url('/exercises', [$exercise->id]) }}"
+	            		 class="btn btn-default btn-block">
 	                {{ $exercise->name }}
 	              </a>
 	            </div>
 
-	            <div class="col-xs-6">
+	            <div class="col-xs-3 col-sm-2 col-md-1">
 	      			  @include('partials.detachExercise')
 	            </div>
 	          </div>

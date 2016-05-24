@@ -24,10 +24,10 @@ class LogController extends Controller
     public function index()
     {
         $workout_id = Auth::user()->workouts()
+            ->select('workouts.id')
             ->join('sets', 'sets.workout_id', '=', 'workouts.id')
             ->whereBetween('sets.created_at', 
                 [Carbon::today(), Carbon::tomorrow()])
-            ->select('workouts.id')
             ->first();
 
         if(!$workout_id) {
@@ -40,21 +40,20 @@ class LogController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id, id of a workout
+     * @param  int $workout_id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($workout_id)
     {
         $workout = Auth::user()->workouts()
-            ->with('exercises')
-            ->with('exercises.sets')
-            ->findOrFail($id);
+            ->findOrFail($workout_id);
 
-        // order by bodyRegion
-        $exerciseList = Auth::user()->exercises()
-            ->select('exercises.id', 'exercises.name')
-            ->lists('name', 'id');
+        $exercises = Auth::user()->exercises()
+            ->join('workout_exercise', 'workout_exercise.exercise_id', '=', 'exercises.id')
+            ->where('workout_exercise.workout_id', '=', $workout_id)
+            ->with('sets')
+            ->paginate(1);
 
-        return view('log', compact('workout', 'exerciseList'));
+        return view('log', compact('workout', 'exercises'));
     }
 }

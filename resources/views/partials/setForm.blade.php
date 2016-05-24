@@ -7,11 +7,11 @@
 </div>
 
 <div class="form-group">
-	{!! Form::input('number', 'repetitions', 0, ['class' => 'form-control', 'placeholder' => 'Repetitions']) !!}
+	{!! Form::input('number', 'repetitions', null, ['class' => 'form-control', 'placeholder' => 'Repetitions']) !!}
 </div>
 
 <div class="form-group">
-	{!! Form::input('number', 'weight', 0, ['class' => 'form-control', 'placeholder' => 'Weight']) !!}
+	{!! Form::input('number', 'weight', null, ['class' => 'form-control', 'placeholder' => 'Weight']) !!}
 </div>
 
 <div class="form-group">

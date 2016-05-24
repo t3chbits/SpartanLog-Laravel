@@ -1,36 +1,41 @@
 @extends('app')
 
 @section('content')
-	<div class="container">
+	<div class="container-fluid">
 
 		<div>@include('errors.list')</div>
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">{{ $group->name }}</h3>
+				<h3 class="panel-title text-center">{{ $group->name }}</h3>
 			</div>
 
 			<div class="panel-body">
 				@if(count($group->workouts))
 		  		@foreach($group->workouts as $workout)
 	          <div class="row">
-	            <div class="col-xs-4">
-	            	<a href="{{ url('/workouts', [$workout->id]) }}">
-	                	{{ $workout->name }}
-	                </a>
-	              </h3>
-	            </div>
+	          	<div class="col-xs-8 col-sm-10">
+		            <div class="col-xs-12 col-sm-6">
+		            	<a href="{{ url('/workouts', [$workout->id]) }}"
+		            		 class="btn btn-default btn-block">
+		                {{ $workout->name }}
+		              </a>
+		            </div>
 
-	            <div class="col-xs-4">
-	              <a href="{{ url('/logs', [$workout->id]) }}">
-	                Generate a log from {{ $workout->name }}
-	              </a>
-	            </div>
+		            <div class="col-xs-12 col-sm-6">
+		              <a href="{{ url('/logs', [$workout->id]) }}"
+		              	 class="btn btn-primary btn-block">
+		              	<span class="glyphicon glyphicon-send"></span>
+		                Generate Log
+		              </a>
+		            </div>
+		          </div>
 
-	            <div class="col-xs-4">
+	            <div class="col-xs-4 col-sm-2">
 	      			  @include('partials.detachWorkout')
 	            </div>
 	          </div>
+	          <br>
 		  		@endforeach
 		  	@else 
 		  	    This group does not contain any workouts
@@ -59,9 +64,9 @@
 			{!! Form::close() !!}
 
 			{!! Form::open(array('url' => 'groups/' . $group->id)) !!}
-		        {!! Form::hidden('_method', 'DELETE') !!}
-		        {!! Form::button('Delete Group', array('type' => 'submit', 'class' => 'btn btn-block btn-danger')) !!}
-		      {!! Form::close() !!}
+        {!! Form::hidden('_method', 'DELETE') !!}
+        {!! Form::button('Delete Group', array('type' => 'submit', 'class' => 'btn btn-block btn-danger')) !!}
+      {!! Form::close() !!}
 		</div>
 	</div>
 @stop

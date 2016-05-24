@@ -1,0 +1,9 @@
+.btn {
+  white-space: normal;
+  height:auto;
+  vertical-align: middle;
+}
+
+table, .borderless td, .borderless th {
+    border: none !important;
+}

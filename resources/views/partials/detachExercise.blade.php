@@ -3,6 +3,8 @@
 		{!! Form::hidden('exercise_id', $exercise->id) !!}
 	</div>
     <div class="form-group">
-		{!! Form::submit('Remove '.$exercise->name.' From '.$workout->name, ['class' => 'btn btn-danger form-control']) !!}
+    	{!! Form::button(
+    		'<span class="glyphicon glyphicon-minus-sign"></span>', 
+    		['type' => 'submit', 'class' => 'btn btn-danger btn-block']) !!}
 	</div>
 {!! Form::close() !!}
