@@ -6,9 +6,9 @@ use JWTAuth;
 use App\Exercise;
 use App\Http\Requests;
 use Illuminate\Http\Request;
-use App\Http\Requests\ExerciseRequest;
 use Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ExerciseRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ExerciseController extends Controller
@@ -40,9 +40,7 @@ class ExerciseController extends Controller
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $exercise = new Exercise;
-
-        $exercise->fill($request->all());
+        $exercise = new Exercise($request->all());
 
         if($currentUser->exercises()->save($exercise))
             return $this->response->created();
@@ -83,10 +81,8 @@ class ExerciseController extends Controller
         if(!$exercise)
             throw new NotFoundHttpException;
 
-        $exercise->fill($request->all());
-
-        if($exercise->save())
-            return $this->response->noContent();
+        if($exercise->update($request->all()))
+            return $exercise;
         else
             return $this->response->error('could_not_update_exercise', 500);
     }

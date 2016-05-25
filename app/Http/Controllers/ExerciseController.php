@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use Auth;
 use App\Exercise;
+use Illuminate\Http\Request;
 use App\Http\Requests\ExerciseRequest;
 
 class ExerciseController extends Controller

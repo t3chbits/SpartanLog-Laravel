@@ -40,9 +40,7 @@ class WorkoutController extends Controller
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $workout = new Workout;
-
-        $workout->fill($request->all());
+        $workout = new Workout($request->all());
 
         if($currentUser->workouts()->save($workout))
             return $this->response->created();
@@ -83,10 +81,8 @@ class WorkoutController extends Controller
         if(!$workout)
             throw new NotFoundHttpException;
 
-        $workout->fill($request->all());
-
-        if($workout->save())
-            return $this->response->noContent();
+        if($workout->update($request->all()))
+            return $workout;
         else
             return $this->response->error('could_not_update_workout', 500);
     }

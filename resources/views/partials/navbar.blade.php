@@ -16,6 +16,7 @@
         <li><a href="{{ url('/workouts') }}">Workouts</a></li>
         <li><a href="{{ url('/exercises') }}">Exercises</a></li>
         <li><a href="{{ url('/history') }}">History</a></li>
+        <li><a href="{{ url('/api') }}">API</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

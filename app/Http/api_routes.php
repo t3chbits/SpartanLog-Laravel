@@ -14,10 +14,6 @@ $api->version('v1', function ($api) {
 			'namespace' => 'App\Api\V1\Controllers'
 		], function ($api) {
 
-		$api->group(['prefix' => 'workouts/{workout_id}/exercises/{exercise_id}'], function ($api) {
-			$api->get('sets', 'SetController@index');
-		});
-
 		$api->group(['prefix' => 'exercises/{exercise_id}'], function ($api) {
 			$api->get('workouts/{id}/attach', 'WorkoutController@attachExercise');
 			$api->get('workouts/{id}/detach', 'WorkoutController@detachExercise');
@@ -36,7 +32,7 @@ $api->version('v1', function ($api) {
 			$api->get('workouts/{id}/detach', 'WorkoutController@detachGroup');
 		});
 
-		$api->resource('sets', 'SetController', ['except' => ['index', 'edit', 'create']]);
+		$api->resource('sets', 'SetController', ['except' => ['edit', 'create']]);
 		$api->resource('exercises', 'ExerciseController', ['except' => ['edit', 'create']]);
 		$api->resource('workouts', 'WorkoutController', ['except' => ['edit', 'create']]);
 		$api->resource('groups', 'GroupController', ['except' => ['edit', 'create']]);

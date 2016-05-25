@@ -40,9 +40,7 @@ class GroupController extends Controller
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $group = new Group;
-
-        $group->fill($request->all());
+        $group = new Group($request->all());
 
         if($currentUser->groups()->save($group))
             return $this->response->created();
@@ -83,10 +81,8 @@ class GroupController extends Controller
         if(!$group)
             throw new NotFoundHttpException;
 
-        $group->fill($request->all());
-
-        if($group->save())
-            return $this->response->noContent();
+        if($group->update($request->all()))
+            return $group;
         else
             return $this->response->error('could_not_update_group', 500);
     }
