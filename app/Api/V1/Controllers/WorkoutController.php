@@ -4,17 +4,12 @@ namespace App\Api\V1\Controllers;
 
 use JWTAuth;
 use App\Workout;
-use App\Http\Requests;
 use Illuminate\Http\Request;
-use Dingo\Api\Routing\Helpers;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkoutRequest;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Api\V1\Controllers\BaseController;
 
-class WorkoutController extends Controller
+class WorkoutController extends BaseController
 {
-    use Helpers;
-
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +38,7 @@ class WorkoutController extends Controller
         $workout = new Workout($request->all());
 
         if($currentUser->workouts()->save($workout))
-            return $this->response->created();
+            return $this->response->array($workout->toArray())->setStatusCode(201);
         else
             return $this->response->error('could_not_create_workout', 500);
     }
@@ -61,7 +56,7 @@ class WorkoutController extends Controller
         $workout = $currentUser->workouts()->with('exercises')->find($id);
 
         if(!$workout)
-            throw new NotFoundHttpException; 
+            return $this->response->errorNotFound(); 
 
         return $workout;
     }
@@ -79,7 +74,7 @@ class WorkoutController extends Controller
 
         $workout = $currentUser->workouts()->find($id);
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($workout->update($request->all()))
             return $workout;
@@ -100,7 +95,7 @@ class WorkoutController extends Controller
         $workout = $currentUser->workouts()->find($id);
 
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($workout->delete())
             return $this->response->noContent();
@@ -121,14 +116,14 @@ class WorkoutController extends Controller
         $workout = $currentUser->workouts()->find($id);
 
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         // If the exercise corresponding to $exercise_id,
         // does not exist throw an error
         $exercise = $currentUser->exercises()->find($exercise_id);
 
         if(!$exercise)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         // If the exercise is not already attached to the workout,
         // attach it.  Otherwise, throw an error.  
@@ -156,12 +151,12 @@ class WorkoutController extends Controller
         $workout = $currentUser->workouts()->find($id);
 
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         $exercise = $currentUser->exercises()->find($exercise_id);
 
         if(!$exercise)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($workout->exercises()->detach($exercise_id))
             return $this->response->noContent();
@@ -182,14 +177,14 @@ class WorkoutController extends Controller
         $workout = $currentUser->workouts()->find($id);
 
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         // If the group corresponding to $group_id,
         // does not exist throw an error
         $group = $currentUser->groups()->find($group_id);
 
         if(!$group)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         // If the group is not already attached to the workout,
         // attach it.  Otherwise, throw an error.  
@@ -217,12 +212,12 @@ class WorkoutController extends Controller
         $workout = $currentUser->workouts()->find($id);
 
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         $group = $currentUser->groups()->find($group_id);
 
         if(!$group)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($workout->groups()->detach($group_id))
             return $this->response->noContent();

@@ -4,14 +4,9 @@ namespace App\Api\V1\Controllers;
 
 use JWTAuth;
 use App\Set;
-use Carbon\Carbon;
-use App\Http\Requests;
 use Illuminate\Http\Request;
-use Dingo\Api\Routing\Helpers;
 use App\Http\Requests\SetRequest;
-use App\Http\Controllers\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use App\Api\V1\Controllers\BaseController;
 
 use Illuminate\Database\Query\Builder;
 
@@ -25,10 +20,8 @@ Builder::macro('if', function ($condition, $column, $operator, $value) {
     return $this;
 });
 
-class SetController extends Controller
+class SetController extends BaseController
 {
-    use Helpers;
-
     /**
      * Display a listing of the sets that are associated with a workout 
      * and an exercise, and that were created between a start date
@@ -37,10 +30,6 @@ class SetController extends Controller
      * If no date query parameters are supplied, then it defaults to getting
      * all sets created today.    
      *
-     * If Carbon::create fails, an internal server error is returned, along
-     * with a helpful error message.  Catching illegalArgumentExceptions
-     * was not successful, so try-catch blocks were removed.
-     *
      * @param  int  $workout_id, int  $exercise_id
      * @return \Illuminate\Http\Response
      */
@@ -48,6 +37,7 @@ class SetController extends Controller
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
+        // Failed Carbon::create needs to respond with a 400 error code not 500
         $startDate = Carbon::today('CST');
         if($request->start_year and $request->start_month and $request->start_day) {
             $startDate = Carbon::create($request->start_year, 
@@ -66,14 +56,14 @@ class SetController extends Controller
             $workout = $currentUser->workouts()->find($request->workout_id);
 
             if(!$workout)
-                throw new NotFoundHttpException;
+                return $this->response->errorNotFound();
         }
 
         if($request->exercise_id) {
             $exercise = $currentUser->exercises()->find($request->exercise_id);
 
             if(!$exercise)
-                throw new NotFoundHttpException;
+                return $this->response->errorNotFound();
         }
 
         return $currentUser->sets()
@@ -83,8 +73,6 @@ class SetController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get()
             ->toArray();
-
-        return $response;
     }
 
     /**
@@ -99,8 +87,8 @@ class SetController extends Controller
 
         $set = new Set($request->all());
 
-        if($currentUser->sets()->save($set))
-            return $this->response->created();
+        if($currentUser->sets()->save($set)) // should return updated resource
+            return $this->response->array($set->toArray())->setStatusCode(201);
         else
             return $this->response->error('could_not_create_set', 500);
     }
@@ -115,10 +103,10 @@ class SetController extends Controller
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $set = $currentUser->sets()->find($id);
+        $set = $currentUser->sets()->find($id); // with associated exercises and workouts
 
         if(!$set)
-            throw new NotFoundHttpException; 
+            return $this->response->errorNotFound();
 
         return $set;
     }
@@ -136,7 +124,7 @@ class SetController extends Controller
 
         $set = $currentUser->sets()->find($id);
         if(!$set)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($set->update($request->all()))
             return $set;
@@ -157,7 +145,7 @@ class SetController extends Controller
         $set = $currentUser->sets()->find($id);
 
         if(!$set)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($set->delete())
             return $this->response->noContent();

@@ -4,17 +4,12 @@ namespace App\Api\V1\Controllers;
 
 use JWTAuth;
 use App\Group;
-use App\Http\Requests;
 use Illuminate\Http\Request;
-use Dingo\Api\Routing\Helpers;
 use App\Http\Requests\GroupRequest;
-use App\Http\Controllers\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Api\V1\Controllers\BaseController;
 
-class GroupController extends Controller
+class GroupController extends BaseController
 {
-    use Helpers;
-
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +38,7 @@ class GroupController extends Controller
         $group = new Group($request->all());
 
         if($currentUser->groups()->save($group))
-            return $this->response->created();
+            return $this->response->array($group->toArray())->setStatusCode(201);
         else
             return $this->response->error('could_not_create_group', 500);
     }
@@ -61,7 +56,7 @@ class GroupController extends Controller
         $group = $currentUser->groups()->with('workouts')->find($id);
 
         if(!$group)
-            throw new NotFoundHttpException; 
+            return $this->response->errorNotFound(); 
 
         return $group;
     }
@@ -79,7 +74,7 @@ class GroupController extends Controller
 
         $group = $currentUser->groups()->find($id);
         if(!$group)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($group->update($request->all()))
             return $group;
@@ -100,7 +95,7 @@ class GroupController extends Controller
         $group = $currentUser->groups()->find($id);
 
         if(!$group)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($group->delete())
             return $this->response->noContent();
@@ -121,14 +116,14 @@ class GroupController extends Controller
         $group = $currentUser->groups()->find($id);
 
         if(!$group)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         // If the workout corresponding to $workout_id,
         // does not exist throw an error.
         $workout = $currentUser->workouts()->find($workout_id);
 
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         // If the workout is not already attached to the workout,
         // attach it.  Otherwise, throw an error.  
@@ -156,12 +151,12 @@ class GroupController extends Controller
         $group = $currentUser->groups()->find($id);
 
         if(!$group)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         $workout = $currentUser->workouts()->find($workout_id);
 
         if(!$workout)
-            throw new NotFoundHttpException;
+            return $this->response->errorNotFound();
 
         if($group->workouts()->detach($workout_id))
             return $this->response->noContent();
