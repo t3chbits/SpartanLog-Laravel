@@ -4,21 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use JWTAuth;
 use App\Set;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\SetRequest;
+use Illuminate\Support\Facades\Schema;
 use App\Api\V1\Controllers\BaseController;
-
-use Illuminate\Database\Query\Builder;
-
-// This is used to add optional query statements.
-// This seemed to be a more concise solution compared
-// to using the when method.
-Builder::macro('if', function ($condition, $column, $operator, $value) {
-    if($condition) {
-        return $this->where($column, $operator, $value);
-    }
-    return $this;
-});
 
 class SetController extends BaseController
 {
@@ -30,49 +20,72 @@ class SetController extends BaseController
      * If no date query parameters are supplied, then it defaults to getting
      * all sets created today.    
      *
-     * @param  int  $workout_id, int  $exercise_id
+     * The orderByWhen statement defaults to orderBy('created_at', 'asc').
+     * orderByDirection must be either 'asc' or 'desc' if supplied.
+     * orderByColumn must be a column in sets table if supplied.
+     * If no direction is supplied and a column is supplied, 
+     * then the direction defaults to 'desc'.
+     *
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        // Failed Carbon::create needs to respond with a 400 error code not 500
-        $startDate = Carbon::today('CST');
-        if($request->start_year and $request->start_month and $request->start_day) {
-            $startDate = Carbon::create($request->start_year, 
-                $request->start_month, $request->start_day, $request->start_hour, 
-                $request->start_minute, $request->start_second, $request->tz);
+        $startDate = Carbon::today('CST'); // default to today at 12:00am
+        if($request->startYear and $request->startMonth and $request->startDay) {
+            try { 
+                $startDate = Carbon::create($request->startYear, 
+                    $request->startMonth, $request->startDay, $request->startHour, 
+                    $request->startMinute, $request->startSecond, $request->tz);
+            
+            // For \InvalidArgumentException, the backslash is necessary
+            // because of namespacing issues
+            } catch(\InvalidArgumentException $x) { 
+                return $this->response->error('Carbon create start date failed.', 400);
+            }
         }
 
-        $endDate = Carbon::tomorrow('CST');
-        if($request->end_year and $request->end_month and $request->end_day) {
-            $endDate = Carbon::create($request->end_year, 
-                $request->end_month, $request->end_day, $request->end_hour, 
-                $request->end_minute, $request->end_second, $request->tz);
+        $endDate = Carbon::tomorrow('CST'); // default to tomorrow at 12:00am
+        if($request->endYear and $request->endMonth and $request->endDay) {
+            try { 
+                $endDate = Carbon::create($request->endYear, 
+                    $request->endMonth, $request->endDay, $request->endHour, 
+                    $request->endMinute, $request->endSecond, $request->tz);
+
+            // For \InvalidArgumentException, the backslash is necessary
+            // because of namespacing issues
+            } catch(\InvalidArgumentException $x) { 
+                return $this->response->error('Carbon create start date failed.', 400);
+            }
         }
 
-        if($request->workout_id) {
-            $workout = $currentUser->workouts()->find($request->workout_id);
+        if($request->workoutID) {
+            $workout = $currentUser->workouts()->find($request->workoutID);
 
             if(!$workout)
                 return $this->response->errorNotFound();
         }
 
-        if($request->exercise_id) {
-            $exercise = $currentUser->exercises()->find($request->exercise_id);
+        if($request->exerciseID) {
+            $exercise = $currentUser->exercises()->find($request->exerciseID);
 
             if(!$exercise)
                 return $this->response->errorNotFound();
         }
 
+        if($request->orderByColumn and !Schema::hasColumn('sets', $request->orderByColumn))
+        {
+            return $this->response->error('OrderByColumn does not exist in the table.', 400);
+        }
+
         return $currentUser->sets()
-            ->if($request->workout_id, 'workout_id', '=', $request->workout_id)
-            ->if($request->exercise_id, 'exercise_id', '=', $request->exercise_id)
+            ->if($request->workoutID, 'workout_id', '=', $request->workoutID)
+            ->if($request->exerciseID, 'exercise_id', '=', $request->exerciseID)
             ->whereBetween('sets.created_at', [$startDate, $endDate])
-            ->orderBy('created_at', 'DESC')
-            ->get()
-            ->toArray();
+            ->orderByWhen($request->orderByColumn, $request->orderByDirection)
+            ->paginate(25);
     }
 
     /**
@@ -90,20 +103,37 @@ class SetController extends BaseController
         if($currentUser->sets()->save($set)) // should return updated resource
             return $this->response->array($set->toArray())->setStatusCode(201);
         else
-            return $this->response->error('could_not_create_set', 500);
+            return $this->response->error('Unable to create the set.', 500);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * If expand=false, the exercise and workout associated with
+     * the set are not loaded.
+     * homestead.app/api/v1/sets/1?expand=false
+     *
+     * If expand=true or expand is not specified in the query string, 
+     * the exercise and workout associated with the set are not loaded.
+     * 
+     *
+     * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $set = $currentUser->sets()->find($id); // with associated exercises and workouts
+        $expand = $request->expand;
+
+        if($expand == null or filter_var($expand, FILTER_VALIDATE_BOOLEAN)) {
+            $set = $currentUser->sets()
+                ->with('exercise', 'workout')
+                ->find($id);
+
+        } else {
+            $set = $currentUser->sets()->find($id);
+        }
 
         if(!$set)
             return $this->response->errorNotFound();
@@ -129,7 +159,7 @@ class SetController extends BaseController
         if($set->update($request->all()))
             return $set;
         else
-            return $this->response->error('could_not_update_set', 500);
+            return $this->response->error('Unable to update the set.', 500);
     }
 
     /**
@@ -150,6 +180,6 @@ class SetController extends BaseController
         if($set->delete())
             return $this->response->noContent();
         else
-            return $this->response->error('could_not_delete_set', 500);
+            return $this->response->error('Unable to destroy the set.', 500);
     }
 }

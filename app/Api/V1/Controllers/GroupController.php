@@ -40,7 +40,7 @@ class GroupController extends BaseController
         if($currentUser->groups()->save($group))
             return $this->response->array($group->toArray())->setStatusCode(201);
         else
-            return $this->response->error('could_not_create_group', 500);
+            return $this->response->error('Unable to create the group.', 500);
     }
 
     /**
@@ -79,7 +79,7 @@ class GroupController extends BaseController
         if($group->update($request->all()))
             return $group;
         else
-            return $this->response->error('could_not_update_group', 500);
+            return $this->response->error('Unable to update the group.', 500);
     }
 
     /**
@@ -100,16 +100,19 @@ class GroupController extends BaseController
         if($group->delete())
             return $this->response->noContent();
         else
-            return $this->response->error('could_not_delete_group', 500);
+            return $this->response->error('Unable to delete the group.', 500);
     }
 
     /**
-     * Attach a workout to a group.
+     * Attach an workout to a group.
+     * 
+     * Example query string:
+     * homestead.app/api/v1/groups/1/attach?workoutID=1
      *
-     * @param  int  $id, int $workout_id
+     * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response
      */
-    public function attachWorkout($workout_id, $id) // order of parameters matters
+    public function attachWorkout($id, Request $request) 
     {   
         $currentUser = JWTAuth::parseToken()->authenticate();
 
@@ -118,33 +121,40 @@ class GroupController extends BaseController
         if(!$group)
             return $this->response->errorNotFound();
 
-        // If the workout corresponding to $workout_id,
-        // does not exist throw an error.
-        $workout = $currentUser->workouts()->find($workout_id);
+        $workoutID = $request->input('workoutID');
+
+        // If the workout corresponding to $workoutID,
+        // does not exist throw an error
+        $workout = $currentUser->workouts()->find($workoutID);
 
         if(!$workout)
             return $this->response->errorNotFound();
 
-        // If the workout is not already attached to the workout,
-        // attach it.  Otherwise, throw an error.  
-        if(!$group->workouts()->find($workout_id)) {
+        // If the workout is not already attached to the group,
+        // attach it.  Otherwise, throw an error because it will get
+        // attached multiple times.
+        if(!$group->workouts()->find($workoutID)) {
             
             // The attach method does not return a boolean value.
-            $group->workouts()->attach($workout_id);
+            $group->workouts()->attach($workoutID);
             return $this->response->noContent();
         
         } else {
-            return $this->response->error('workout_already_attached_to_group', 500);
+            return $this->response->error(
+                'The workout is already attached to the group.', 400);
         }
     }
 
     /**
-     * Detach a workout from a group.
+     * Detach an workout or several workouts from a group.
      *
-     * @param  int  $id, int $workout_id
+     * Example query string:
+     * homestead.app/api/v1/groups/1/detach?workoutID=1
+     *
+     * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response
      */
-    public function detachWorkout($workout_id, $id) 
+    public function detachWorkout($id, Request $request) 
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
@@ -153,14 +163,20 @@ class GroupController extends BaseController
         if(!$group)
             return $this->response->errorNotFound();
 
-        $workout = $currentUser->workouts()->find($workout_id);
+        $workoutID = $request->input('workoutID');
+
+        $workout = $currentUser->workouts()->find($workoutID);
 
         if(!$workout)
             return $this->response->errorNotFound();
 
-        if($group->workouts()->detach($workout_id))
-            return $this->response->noContent();
-        else
-            return $this->response->error('could_not_update_group', 500);
+        if($group->workouts()->find($workoutID)) {
+            if($group->workouts()->detach($workoutID))
+                return $this->response->noContent();
+            else
+                return $this->response->error('Unable to detach the workout.', 500);
+        } else {
+            return $this->response->error('The workout was already detached.', 400);
+        }
     }
 }
