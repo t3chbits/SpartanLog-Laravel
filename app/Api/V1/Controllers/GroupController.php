@@ -6,6 +6,7 @@ use JWTAuth;
 use App\Group;
 use Illuminate\Http\Request;
 use App\Http\Requests\GroupRequest;
+use Illuminate\Support\Facades\Schema;
 use App\Api\V1\Controllers\BaseController;
 
 class GroupController extends BaseController
@@ -13,16 +14,31 @@ class GroupController extends BaseController
     /**
      * Display a listing of the resource.
      *
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
+
+        if($request->orderByColumn and !Schema::hasColumn('groups', $request->orderByColumn))
+        {
+            return $this->response->error('OrderByColumn does not exist in the table.', 400);
+        }
+
+        $itemsPerPage = 25;
+        if($request->itemsPerPage and $request->itemsPerPage <= 0) 
+        {
+            return $this->response->error('ItemsPerPage must be greater than 0.', 400);
+        
+        } else {
+            $itemsPerPage = $request->itemsPerPage;
+        }
+
         return $currentUser
             ->groups()
-            ->orderBy('created_at', 'DESC')
-            ->get()
-            ->toArray();
+            ->orderByIf($request->orderByColumn, $request->orderByDirection)
+            ->paginate($itemsPerPage);
     }
 
     /**

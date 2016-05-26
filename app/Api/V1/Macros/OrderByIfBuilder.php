@@ -7,7 +7,7 @@ use Illuminate\Database\Query\Builder;
 // This is used to add optional orderBy conditions.
 // This seemed to be a more concise solution compared
 // to using the when method.
-Builder::macro('orderByWhen', function ($column, $direction) {
+Builder::macro('orderByIf', function ($column, $direction) {
     if($column) {
         return $this->orderBy($column, $direction);
     }

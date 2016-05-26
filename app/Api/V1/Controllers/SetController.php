@@ -80,12 +80,19 @@ class SetController extends BaseController
             return $this->response->error('OrderByColumn does not exist in the table.', 400);
         }
 
+        $itemsPerPage = 25;
+        if($request->itemsPerPage and $request->itemsPerPage <= 0) {
+            return $this->response->error('ItemsPerPage must be greater than 0.', 400);
+        } else {
+            $itemsPerPage = $request->itemsPerPage;
+        }
+
         return $currentUser->sets()
             ->if($request->workoutID, 'workout_id', '=', $request->workoutID)
             ->if($request->exerciseID, 'exercise_id', '=', $request->exerciseID)
             ->whereBetween('sets.created_at', [$startDate, $endDate])
-            ->orderByWhen($request->orderByColumn, $request->orderByDirection)
-            ->paginate(25);
+            ->orderByIf($request->orderByColumn, $request->orderByDirection)
+            ->paginate($itemsPerPage);
     }
 
     /**
@@ -115,7 +122,6 @@ class SetController extends BaseController
      *
      * If expand=true or expand is not specified in the query string, 
      * the exercise and workout associated with the set are not loaded.
-     * 
      *
      * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response

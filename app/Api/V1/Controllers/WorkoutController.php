@@ -6,6 +6,7 @@ use JWTAuth;
 use App\Workout;
 use Illuminate\Http\Request;
 use App\Http\Requests\WorkoutRequest;
+use Illuminate\Support\Facades\Schema;
 use App\Api\V1\Controllers\BaseController;
 
 class WorkoutController extends BaseController
@@ -13,16 +14,29 @@ class WorkoutController extends BaseController
     /**
      * Display a listing of the resource.
      *
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
+
+        if($request->orderByColumn and !Schema::hasColumn('workouts', $request->orderByColumn)) {
+            return $this->response->error('OrderByColumn does not exist in the table.', 400);
+        }
+
+        $itemsPerPage = 25;
+        if($request->itemsPerPage and $request->itemsPerPage <= 0) {
+            return $this->response->error('ItemsPerPage must be greater than 0.', 400);
+        
+        } else {
+            $itemsPerPage = $request->itemsPerPage;
+        }
+
         return $currentUser
             ->workouts()
-            ->orderBy('created_at', 'DESC')
-            ->get()
-            ->toArray();
+            ->orderByIf($request->orderByColumn, $request->orderByDirection)
+            ->paginate($itemsPerPage);
     }
 
     /**
@@ -53,7 +67,9 @@ class WorkoutController extends BaseController
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $workout = $currentUser->workouts()->with('exercises')->find($id);
+        $workout = $currentUser->workouts()
+            ->with('exercises', 'groups')
+            ->find($id);
 
         if(!$workout)
             return $this->response->errorNotFound(); 
