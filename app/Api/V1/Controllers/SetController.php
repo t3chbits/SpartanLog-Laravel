@@ -20,7 +20,7 @@ class SetController extends BaseController
      * If no date query parameters are supplied, then it defaults to getting
      * all sets created today.    
      *
-     * The orderByWhen statement defaults to orderBy('created_at', 'asc').
+     * The orderByIf statement defaults to orderBy('created_at', 'asc').
      * orderByDirection must be either 'asc' or 'desc' if supplied.
      * orderByColumn must be a column in sets table if supplied.
      * If no direction is supplied and a column is supplied, 
@@ -88,8 +88,8 @@ class SetController extends BaseController
         }
 
         return $currentUser->sets()
-            ->if($request->workoutID, 'workout_id', '=', $request->workoutID)
-            ->if($request->exerciseID, 'exercise_id', '=', $request->exerciseID)
+            ->whereIf($request->workoutID, 'workout_id', '=', $request->workoutID)
+            ->whereIf($request->exerciseID, 'exercise_id', '=', $request->exerciseID)
             ->whereBetween('sets.created_at', [$startDate, $endDate])
             ->orderByIf($request->orderByColumn, $request->orderByDirection)
             ->paginate($itemsPerPage);

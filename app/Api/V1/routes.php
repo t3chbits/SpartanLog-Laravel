@@ -10,7 +10,7 @@ $api->version('v1', function ($api) {
 	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
 
 	$api->group([
-			'middleware' => ['api.auth', 'cors', 'throttle'], 
+			'middleware' => ['api.auth', 'cors'], 
 			'namespace' => 'App\Api\V1\Controllers'
 		], function ($api) {
 

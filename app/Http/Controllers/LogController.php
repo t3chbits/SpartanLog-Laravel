@@ -52,7 +52,9 @@ class LogController extends Controller
             ->join('workout_exercise', 'workout_exercise.exercise_id', '=', 'exercises.id')
             ->where('workout_exercise.workout_id', '=', $workout_id)
             ->select('exercises.id', 'exercises.name')
-            ->with('sets')
+            ->with(['sets' => function ($query) {
+                $query->whereBetween('sets.created_at', [Carbon::today(), Carbon::tomorrow()]);
+            }])
             ->paginate(1);
 
         return view('log', compact('workout', 'exercises'));

@@ -14,6 +14,12 @@ class GroupController extends BaseController
     /**
      * Display a listing of the resource.
      *
+     * The orderByIf statement defaults to orderBy('created_at', 'asc').
+     * orderByDirection must be either 'asc' or 'desc' if supplied.
+     * orderByColumn must be a column in the groups table if supplied.
+     * If no direction is supplied and a column is supplied, 
+     * then the direction defaults to 'desc'.
+     *
      * @param  Request $request
      * @return \Illuminate\Http\Response
      */
@@ -62,14 +68,26 @@ class GroupController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * If the expand query parameter is set to false,
+     * then the workouts associated with the group 
+     * will not be returned in the response.
+     *
+     * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $group = $currentUser->groups()->with('workouts')->find($id);
+        $expand = $request->expand;
+
+        if($expand == null or filter_var($expand, FILTER_VALIDATE_BOOLEAN)) {
+            $group = $currentUser->groups()
+                ->with('workouts')
+                ->find($id);
+        } else {
+            $group = $currentUser->groups()->find($id);
+        }
 
         if(!$group)
             return $this->response->errorNotFound(); 

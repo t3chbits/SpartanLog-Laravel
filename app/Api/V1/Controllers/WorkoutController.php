@@ -14,6 +14,12 @@ class WorkoutController extends BaseController
     /**
      * Display a listing of the resource.
      *
+     * The orderByIf statement defaults to orderBy('created_at', 'asc').
+     * orderByDirection must be either 'asc' or 'desc' if supplied.
+     * orderByColumn must be a column in the workouts table if supplied.
+     * If no direction is supplied and a column is supplied, 
+     * then the direction defaults to 'desc'.
+     *
      * @param  Request $request
      * @return \Illuminate\Http\Response
      */
@@ -33,8 +39,7 @@ class WorkoutController extends BaseController
             $itemsPerPage = $request->itemsPerPage;
         }
 
-        return $currentUser
-            ->workouts()
+        return $currentUser->workouts()
             ->orderByIf($request->orderByColumn, $request->orderByDirection)
             ->paginate($itemsPerPage);
     }
@@ -60,16 +65,26 @@ class WorkoutController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * If the expand query parameter is set to false,
+     * then the exercises and groups associated with the 
+     * workout will not be returned in the response.
+     *
+     * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $workout = $currentUser->workouts()
-            ->with('exercises', 'groups')
-            ->find($id);
+        $expand = $request->expand;
+
+        if($expand == null or filter_var($expand, FILTER_VALIDATE_BOOLEAN)) {
+            $workout = $currentUser->workouts()
+                ->with('exercises', 'groups')
+                ->find($id);
+        } else {
+            $workout = $currentUser->workouts()->find($id);
+        }
 
         if(!$workout)
             return $this->response->errorNotFound(); 

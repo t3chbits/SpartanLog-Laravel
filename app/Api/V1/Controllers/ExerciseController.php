@@ -14,6 +14,12 @@ class ExerciseController extends BaseController
     /**
      * Display a listing of the resource.
      *
+     * The orderByIf statement defaults to orderBy('created_at', 'asc').
+     * orderByDirection must be either 'asc' or 'desc' if supplied.
+     * orderByColumn must be a column in the exercises table if supplied.
+     * If no direction is supplied and a column is supplied, 
+     * then the direction defaults to 'desc'.
+     *
      * @param  Request $request
      * @return \Illuminate\Http\Response
      */
@@ -62,14 +68,26 @@ class ExerciseController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * If the expand query parameter is set to false,
+     * then the workouts associated with the exercise 
+     * will not be returned in the response.
+     *
+     * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $currentUser = JWTAuth::parseToken()->authenticate();
 
-        $exercise = $currentUser->exercises()->with('workouts')->find($id);
+        $expand = $request->expand;
+
+        if($expand == null or filter_var($expand, FILTER_VALIDATE_BOOLEAN)) {
+            $exercise = $currentUser->exercises()
+                ->with('workouts')
+                ->find($id);
+        } else {
+            $exercise = $currentUser->exercises()->find($id);
+        }
 
         if(!$exercise)
             return $this->response->errorNotFound(); 
