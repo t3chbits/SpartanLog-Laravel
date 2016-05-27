@@ -1,8 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="container">
-    <h1>Register</h1>
+    <h1 class="text-center">Register</h1>
     <hr/>
 
     <form class="form-group" method="POST" action="/auth/register">
@@ -35,5 +34,4 @@
             <button class="btn btn-default" type="submit">Register</button>
         </div>
     </form>
-</div>
 @stop

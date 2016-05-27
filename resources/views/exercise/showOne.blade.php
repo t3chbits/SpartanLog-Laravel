@@ -1,7 +1,6 @@
 @extends('app')
 
 @section('content')
-	<div class="container">
 		<div>@include('errors.list')</div>
 
 		<div class="well">
@@ -25,5 +24,4 @@
                 {!! Form::button('Delete Exercise', array('type' => 'submit', 'class' => 'btn btn-block btn-danger')) !!}
             {!! Form::close() !!}
         </div>
-	</div>
 @stop

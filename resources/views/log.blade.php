@@ -1,7 +1,6 @@
 @extends('app')
 
 @section('content')
-  <div class="container-fluid"> 
 
     <div>@include('errors.list')</div>  
 
@@ -52,7 +51,7 @@
                     @endforeach
                   </table>
                 @else 
-                  <p>No sets have been logged for this exercise</p>
+                  <h5 class="text-center">No sets have been logged for this exercise</h5>
                 @endif
               </div>
               <div class="col-xs-12 col-sm-6 col-md-6">
@@ -65,7 +64,9 @@
         </div>
       @endforeach
     @else 
-      <p>This workout does not contain any exercises</p>
+      <div class="well text-center">
+        <h5>This workout does not contain any exercises</h5>
+      </div>
     @endif
 
     <div class="well text-center">
@@ -81,5 +82,4 @@
         </div>
       </div>
     </div>
-  </div>
 @stop

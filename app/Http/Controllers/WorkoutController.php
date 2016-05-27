@@ -51,8 +51,8 @@ class WorkoutController extends Controller
         $workout = Auth::user()->workouts()->findOrFail($id);
 
         $exerciseList = Auth::user()->exercises()
-            ->select('exercises.id', 'exercises.name')
-            ->lists('name', 'id');
+            ->select('exercises.id as exerciseID', 'exercises.name')
+            ->lists('name', 'exerciseID');
 
         return view('workout.showOne', compact('workout', 'exerciseList'));
     }
@@ -94,14 +94,16 @@ class WorkoutController extends Controller
     public function attachExercise(Request $request, $id) 
     {   
         $workout = Auth::user()->workouts()->findOrFail($id);
-        $exerciseIDs = $request->id;
+        $exerciseIDs = $request->exerciseID;
         
-        foreach($exerciseIDs as $exercise_id) {
-            $exercise = Auth::user()->exercises()->findOrFail($exercise_id);
+        if($exerciseIDs) {
+            foreach($exerciseIDs as $exercise_id) {
+                $exercise = Auth::user()->exercises()->findOrFail($exercise_id);
 
-            if(!$workout->exercises()->find($exercise_id)) {
-                $workout->exercises()->attach($exercise_id);
-            } 
+                if(!$workout->exercises()->find($exercise_id)) {
+                    $workout->exercises()->attach($exercise_id);
+                } 
+            }
         }
         return redirect()->back();
     }

@@ -1,7 +1,6 @@
 @extends('app')
 
 @section('content')
-	<div class="container-fluid">
 
 		<div>@include('errors.list')</div>
 
@@ -38,7 +37,9 @@
 			          </div>
 			  		@endforeach
 			  	@else 
-			  	    This workout does not contain any exercises
+			  	    <h5 class="text-center">
+			  	    	This workout does not contain any exercises
+			  	    </h5>
 			  	@endif
 		    </div>
 
@@ -68,5 +69,4 @@
 		        {!! Form::button('Delete Workout', array('type' => 'submit', 'class' => 'btn btn-block btn-danger')) !!}
 		    {!! Form::close() !!}
 		</div>
-	</div>
 @stop

@@ -9,7 +9,7 @@
 			</div>
 		@endforeach
 	@else 
-		<h3>You do not have any history to display.</h3>
+		<h3 class="text-center">You do not have any history to display.</h3>
 	@endif
 </div>
 

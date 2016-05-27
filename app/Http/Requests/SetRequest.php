@@ -25,7 +25,7 @@ class SetRequest extends FormRequest
     public function rules()
     {
         return [
-            'repetitions' => 'required|integer|between:0,200',
+            'repetitions' => 'required|integer|between:1,200',
             'weight' => 'required|integer|between:0,1000'
         ];
     }

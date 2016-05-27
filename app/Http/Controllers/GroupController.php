@@ -51,8 +51,8 @@ class GroupController extends Controller
         $group = Auth::user()->groups()->findOrFail($id);
 
         $workoutList = Auth::user()->workouts()
-            ->select('workouts.id', 'workouts.name')
-            ->lists('name', 'id');
+            ->select('workouts.id as workoutID', 'workouts.name')
+            ->lists('name', 'workoutID');
 
         return view('group.showOne', compact('group', 'workoutList'));
     }
@@ -94,14 +94,16 @@ class GroupController extends Controller
     public function attachWorkout(Request $request, $id) 
     {   
         $group = Auth::user()->groups()->findOrFail($id);
-        $workoutIDs = $request->id;
+        $workoutIDs = $request->workoutID;
 
-        foreach($workoutIDs as $workout_id) {
-            $workout = Auth::user()->workouts()->findOrFail($workout_id);
+        if($workoutIDs) {
+            foreach($workoutIDs as $workout_id) {
+                $workout = Auth::user()->workouts()->findOrFail($workout_id);
 
-            if(!$group->workouts()->find($workout_id)) {
-                $group->workouts()->attach($workout_id);
-            } 
+                if(!$group->workouts()->find($workout_id)) {
+                    $group->workouts()->attach($workout_id);
+                } 
+            }
         }
         return redirect()->back();
     }

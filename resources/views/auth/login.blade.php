@@ -1,8 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="container">
-    <h1>Login</h1>
+    <h1 class="text-center">Login</h1>
     <hr/>
 
     <form method="POST" action="/auth/login">
@@ -31,5 +30,4 @@
         <button type="submit" class="btn btn-default">Login</button>
 
     </form>
-</div>
 @stop

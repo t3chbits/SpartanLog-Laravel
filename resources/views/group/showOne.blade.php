@@ -38,7 +38,7 @@
 	          <br>
 		  		@endforeach
 		  	@else 
-		  	    This group does not contain any workouts
+		  	    <h5 class="text-center">This group does not contain any workouts</h5>
 		  	@endif
 		  </div>
 

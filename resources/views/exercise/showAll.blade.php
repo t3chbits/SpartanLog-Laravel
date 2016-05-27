@@ -1,7 +1,6 @@
 @extends('app')
 
 @section('content')
-	<div class="container">	
 
 		<div>@include('errors.list')</div>	
 
@@ -40,5 +39,4 @@
 		</div>
 
 		{!! $exercises->links() !!}
-	</div>
 @stop

@@ -1,7 +1,7 @@
 {!! Form::open(['action' => ['GroupController@attachWorkout', $group->id]]) !!}
 
     <div class="form-group">
-	    {!! Form::select('id[]', $workoutList, null, [
+	    {!! Form::select('workoutID[]', $workoutList, null, [
 	    	'id' => 'workout_list', 
 	    	'class' => 'form-control', 
 	    	'multiple', 
