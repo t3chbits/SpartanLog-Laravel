@@ -9,7 +9,7 @@
 	    "tymon/jwt-auth": "0.5.*",
         "dingo/api": "1.0.*@dev",
         "barryvdh/laravel-cors": "^0.7.1",
-        "illuminate/html": "~5.0",
+        "laravelcollective/html": "5.2.*",
         "laracasts/utilities": "~2.0"
     },
     "require-dev": {
@@ -42,6 +42,7 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
+            "mkdir bootstrap/cache",
             "php artisan optimize",
             "php artisan key:generate",
             "php artisan jwt:generate"
