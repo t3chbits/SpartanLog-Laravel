@@ -70,3 +70,9 @@
 		</div>
 	</div>
 @stop
+
+@section('footer')
+
+@include ('partials.select2js')
+
+@stop

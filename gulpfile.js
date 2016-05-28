@@ -12,5 +12,23 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss');
+	mix.copy('bower_components/jquery/dist',
+		'public/jquery')
+
+	mix.copy('bower_components/bootstrap/dist', 
+		'public/bootstrap');
+
+	mix.copy('bower_components/select2/dist', 
+		'public/select2');
+
+	mix.copy('bower_components/Chart.js/dist', 
+		'public/chartjs');
+
+    mix.styles([
+        'app.css'
+    ]);
+    
+    mix.browserify('app.js', 'public/js/app.js');
+    mix.browserify('exerciseCharts.js', 'public/js/exerciseCharts.js');
+    mix.browserify('initSelect2.js', 'public/js/initSelect2.js');
 });

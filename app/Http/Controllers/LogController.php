@@ -23,17 +23,18 @@ class LogController extends Controller
      */
     public function index()
     {
-        $workout_id = Auth::user()->workouts()
+        $workout = Auth::user()->workouts()
             ->join('sets', 'sets.workout_id', '=', 'workouts.id')
             ->whereBetween('sets.created_at', 
                 [Carbon::today(), Carbon::tomorrow()])
+            ->select('workout_id')
             ->first();
 
-        if(!$workout_id) {
+        if(!$workout) {
             return redirect()->action('WorkoutController@index');
         }
 
-        return redirect()->action('LogController@show', [$workout_id]);
+        return redirect()->action('LogController@show', [$workout->workout_id]);
     }
 
     /**

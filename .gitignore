@@ -130,3 +130,7 @@ storage/
 
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
+
+### Bower compoments and Public assets ###
+bower_components
+public/*

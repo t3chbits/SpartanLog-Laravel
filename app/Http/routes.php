@@ -33,8 +33,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('groups/{id}/attachWorkout', 'GroupController@attachWorkout');
 	Route::post('groups/{id}/detachWorkout', 'GroupController@detachWorkout');
 
-	Route::get('logs', 'LogController@index');
 	Route::get('logs/{workout_id}', 'LogController@show');
+	Route::get('logs', 'LogController@index');
 
 	Route::resource('sets', 'SetController', ['except' => ['index', 'show', 'create']]);
 	Route::resource('exercises', 'ExerciseController', ['except' => ['create', 'edit']]);

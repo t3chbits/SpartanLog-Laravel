@@ -17,6 +17,6 @@
 
 @section('footer')
 
-@include ('partials.footer') <!-- include js from controller -->
+@include ('partials.exerciseChartjs') <!-- include js from controller -->
 
 @stop
