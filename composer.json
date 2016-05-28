@@ -42,7 +42,6 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "mkdir bootstrap/cache",
             "php artisan optimize",
             "php artisan jwt:generate"
         ],
