@@ -43,7 +43,8 @@
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "php artisan optimize",
-            "php artisan jwt:generate"
+            "php artisan jwt:generate",
+            "npm install"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
