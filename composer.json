@@ -44,6 +44,7 @@
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
             "mkdir bootstrap/cache",
             "php artisan optimize",
+            "php artisan cache:clear",
             "php artisan key:generate",
             "php artisan jwt:generate"
         ],
