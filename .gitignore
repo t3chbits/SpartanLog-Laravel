@@ -122,3 +122,7 @@ Homestead.json
 ### Bower compoments and Public assets ###
 bower_components
 public/*
+
+### Vagrant ### 
+.vagrant
+Vagrantfile
