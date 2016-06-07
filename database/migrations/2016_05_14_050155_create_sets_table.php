@@ -18,7 +18,7 @@ class CreateSetsTable extends Migration
             $table->integer('workout_id')->unsigned();
             $table->integer('exercise_id')->unsigned();
             $table->integer('repetitions')->unsigned();
-            $table->integer('weight')->unsigned();
+            $table->double('weight', 15, 8);
             $table->timestamps();
 
             $table->foreign('user_id')
