@@ -25,7 +25,7 @@ class WorkoutRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'bail|required|between:3,255|alpha_dash'
+            'name' => 'required|between:3,255'
         ];
     }
 }

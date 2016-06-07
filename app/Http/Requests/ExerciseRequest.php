@@ -25,7 +25,7 @@ class ExerciseRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'bail|sometimes|required|between:3,255|alpha_dash',
+            'name' => 'required|between:3,255',
             'bodyRegion' => 'required|in:Chest,Back,Legs,Shoulders,Biceps,Triceps,Neck,Forearms,FullBody'
         ];
     }
