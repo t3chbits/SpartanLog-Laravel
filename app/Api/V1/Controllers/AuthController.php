@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Password;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Dingo\Api\Exception\ValidationHttpException;
 
+use Event;
+use App\Events\UserWasCreated;
+
 class AuthController extends Controller
 {
     use Helpers;
