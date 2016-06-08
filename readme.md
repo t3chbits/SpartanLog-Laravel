@@ -1,5 +1,20 @@
 ## Spartan Weight Lifting Log
 
+## Overview
+* Rest API for tracking workouts 
+    * User authentication with JSON Web Tokens
+    * REST principles followed (Documentation coming soon)
+        * Appropriate HTTP status codes and responses
+        * Paginated results 
+        * Sorting 
+        * Expansion
+        * Filtering 
+* Frontend (mainly intended to demonstrate that data is synchronized correctly)
+    * Responsive and mobile-ready user interface (Bootstrap)
+    * Elixer/Gulp asset pipeline
+    * Interactive Graph (ChartJS)
+    * Rest Timers (JQuery)
+
 ## Installation
 
     git clone the repository
