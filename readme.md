@@ -1,5 +1,5 @@
 ## Spartan Weight Lifting Log    
-(http://spartan-weight-lifting-log.herokuapp.com/login)
+### http://spartan-weight-lifting-log.herokuapp.com/login
 
 ## Overview
 * Rest API for tracking workouts 
