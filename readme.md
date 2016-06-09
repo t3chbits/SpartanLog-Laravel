@@ -16,11 +16,11 @@
     * Interactive Graph (ChartJS)
     * Rest Timers (JQuery)
 
-## Installation
+## Installation 
 
-    git clone the repository
+    git clone https://github.com/ColinConduff/SpartanLog-Laravel.git
     composer install
-    vagrant up
+    vagrant up (Note: Must have vagrant and virtualbox installed)
 
 ## The following libraries were used:
 * francescomalatesta's jwt api boilerplate 
